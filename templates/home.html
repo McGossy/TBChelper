@@ -1,0 +1,9 @@
+
+{% extends "layout2.html" %}
+{% block content %}
+    <h1>|All Dungeons|</h1>
+    {% for location in terms %}
+        <h3>{{ location }}:</h3>
+        <p>{{ terms[location] }}</p>
+    {% endfor %}
+{% endblock content %}
