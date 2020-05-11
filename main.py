@@ -93,6 +93,3 @@ def search_r():
 @app.route("/all_dungeons")
 def all_dg():
     return render_template('home.html', title='All Dungeons', terms=terms)
-
-if __name__ == '__main__':
-    app.run(debug=True)
