@@ -1,29 +1,14 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, render_template, url_for, redirect
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, SubmitField
 
-
-class RegistrationForm(FlaskForm):
-    username = StringField('Username')
-    email = StringField('Email')
-    password = PasswordField('Password')
-    confirm_password = PasswordField('Confirm Password')
-    submit = SubmitField('Sign Up')
-
-
-class LoginForm(FlaskForm):
-    email = StringField('Email')
-    password = PasswordField('Password')
-    remember = BooleanField('Remember Me')
-    submit = SubmitField('Sign Up')
+app = Flask(__name__)
 
 
 class SearchForm(FlaskForm):
     search = StringField('Search')
     submit = SubmitField('Search')
 
-
-app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '382bfk3028fh378aj38fah238bz1aq1p'
 
@@ -85,41 +70,29 @@ terms =  {'AC': 'Terokkar Forest: Auchindoun: Auchenai Crypts[65-57] 5-man',
          'ZF': 'Tanaris: Zul\'Farrak[43-47] 5-man',
          'ZG': 'Stranglethorn Vale: Zul\'Gurub[60-62] 20-man'}
 
+global data
+
 @app.route("/")
 @app.route("/home")
 def home():
     return render_template('home.html', title='All Dungeons', terms=terms)
 @app.route("/search", methods=['GET', 'POST'])
 def search():
+    global data
     form = SearchForm()
     if form.validate_on_submit():
         form.search.data = form.search.data.upper()
         if form.search.data in terms:
-            flash(f'{form.search.data}: {terms[form.search.data]}', 'success')
-        else:
-            flash(f'{form.search.data} was not found.', 'error')
+            data = form.search.data
+            return redirect(url_for('search_r'))
     return render_template('search.html', title='Dungeon Search', terms=terms, form=form)
+@app.route("/search_results")
+def search_r():
+    return render_template('search_results.html', title='Search Results', terms=terms, data=data)
+
 @app.route("/all_dungeons")
 def all_dg():
     return render_template('home.html', title='All Dungeons', terms=terms)
-@app.route("/about")
-def about():
-    return render_template('about.html', title="About")
-
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        flash(f'Account created for {form.username.data}', 'success')
-        return redirect(url_for('home'))
-    return render_template('register.html', title="Register", form=form)
-
-@app.route("/login")
-def login():
-    form = LoginForm()
-    return render_template('login.html', title="Register", form=form)
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
