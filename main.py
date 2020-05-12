@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 
@@ -78,13 +78,13 @@ def home():
     return render_template('home.html', title='All Dungeons', terms=terms)
 @app.route("/search", methods=['GET', 'POST'])
 def search():
-    global data
     form = SearchForm()
     if form.validate_on_submit():
         form.search.data = form.search.data.upper()
         if form.search.data in terms:
-            data = form.search.data
-            return redirect(url_for('search_r'))
+            flash(f'{form.search.data}: {terms[form.search.data]}', 'success')
+        else:
+            flash(f'{form.search.data} was not found.', 'error')
     return render_template('search.html', title='Dungeon Search', terms=terms, form=form)
 @app.route("/search_results")
 def search_r():
@@ -98,4 +98,4 @@ if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
-    app.run(debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=True)
