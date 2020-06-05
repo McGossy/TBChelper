@@ -1,0 +1,29 @@
+{% extends "layout2.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Role Submit</legend>
+                <div class="form-group">
+                    {{ form.char_name.label(class="form-control-label") }}
+                    {{ form.char_name(class="form-control form-control-lg") }}
+                    {{ form.char_class.label(class="form-control-label") }}
+                    {{ form.char_class(class="form-control form-control-lg") }}
+                    {{ form.role.label(class="form-control-label") }}
+                    {{ form.role(class="form-control form-control-lg") }}
+                    {{ form.time_pref.label(class="form-control-label") }}
+                    {{ form.time_pref(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+            </fieldset>
+        </form>
+    </div>
+    {% for i in range(len(roles)) %}
+        <h2><u>{{ roles[i][0] }}</u></h2>
+        <h3><b>Class:</b> {{roles[i][1]}} <b>Role:</b> {{ roles[i][2] }} <b>Time:</b> {{ roles[i][3] }}</h3>
+    {% endfor %}
+
+{% endblock content %}

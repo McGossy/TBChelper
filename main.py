@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 from flask import Flask, render_template, url_for, redirect
+=======
+from flask import Flask, render_template, redirect
+>>>>>>> Stashed changes
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 
@@ -8,6 +12,15 @@ app = Flask(__name__)
 class SearchForm(FlaskForm):
     search = StringField('Search')
     submit = SubmitField('Search')
+
+roles = list(list())
+
+class RoleForm(FlaskForm):
+    char_name = StringField('In-game Name')
+    char_class = StringField('Class')
+    role = StringField('Role')
+    time_pref = StringField('Time Preference(ST)')
+    submit = SubmitField('Submit')
 
 
 app.config['SECRET_KEY'] = '382bfk3028fh378aj38fah238bz1aq1p'
@@ -76,7 +89,6 @@ global data
 @app.route("/home")
 def home():
     return render_template('home.html', title='All Dungeons', terms=terms)
-@app.route("/search", methods=['GET', 'POST'])
 def search():
     global data
     form = SearchForm()
@@ -93,6 +105,26 @@ def search_r():
 @app.route("/all_dungeons")
 def all_dg():
     return render_template('home.html', title='All Dungeons', terms=terms)
+
+@app.route("/raid_roles", methods=['GET', 'POST'])
+def raid_roles():
+    form = RoleForm()
+    name_found = False
+    if form.validate_on_submit():
+        for i in range(len(roles)):
+            if roles[i][0] == form.char_name.data:
+                roles[i][0] = form.char_name.data
+                roles[i][1] = form.char_class.data
+                roles[i][2] = form.role.data
+                roles[i][3] = form.time_pref.data
+                name_found = True
+                print("name_found = True")
+                break
+            else:
+                name_found = False
+        if name_found == False:
+            roles.append([form.char_name.data, form.char_class.data, form.role.data, form.time_pref.data])
+    return render_template('raid_roles.html', title='Raid Roles',  roles=roles, form=form, len=len)
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
