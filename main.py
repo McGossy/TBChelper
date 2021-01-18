@@ -86,6 +86,7 @@ global data
 @app.route("/home")
 def home():
     return render_template('home.html', title='All Dungeons', terms=terms)
+@app.route("/search")
 def search():
     global data
     form = SearchForm()
